@@ -1,0 +1,558 @@
+Setting environment for using XAMPP for Windows.
+BILQIS@DESKTOP-JEDENJ6 c:\xampp
+# mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| dbkuliah           |
+| dbpuskesmas        |
+| dbtoko2            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+8 rows in set (0.061 sec)
+
+MariaDB [(none)]> CREATE DATABASE dbpegawai;
+Query OK, 1 row affected (0.003 sec)
+
+MariaDB [(none)]> USE dbpegawai;
+Database changed
+
+MariaDB [dbpegawai]> CREATE TABLE divisi(
+    -> id int primary key auto_increment,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.064 sec)
+
+MariaDB [dbpegawai]> DESC divisi;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.027 sec)
+
+MariaDB [dbpegawai]> CREATE TABLE jabatan(
+    -> id int primary key auto_increment,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.090 sec)
+
+MariaDB [dbpegawai]> DESC jabatan;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.028 sec)
+
+MariaDB [dbpegawai]> CREATE TABLE pegawai(
+    -> id int primary key auto_increment,
+    -> nip char(5) not null unique,
+    -> nama varchar(30) not null,
+    -> gender enum('Laki-laki','Perempuan') not null,
+    -> tmp_lahir varchar(30) not null,
+    -> tgl_lahir date not null,
+    -> id_divisi int not null references divisi(id),
+    -> id_jabatan int not null references jabatan(id),
+    -> alamat text);
+Query OK, 0 rows affected (0.067 sec)
+
+MariaDB [dbpegawai]> DESC pegawai;
++------------+-------------------------------+------+-----+---------+----------------+
+| Field      | Type                          | Null | Key | Default | Extra          |
++------------+-------------------------------+------+-----+---------+----------------+
+| id         | int(11)                       | NO   | PRI | NULL    | auto_increment |
+| nip        | char(5)                       | NO   | UNI | NULL    |                |
+| nama       | varchar(30)                   | NO   | UNI | NULL    |                |
+| gender     | enum('Laki-laki','Perempuan') | NO   | UNI | NULL    |                |
+| tmp_lahir  | varchar(30)                   | NO   | UNI | NULL    |                |
+| tgl_lahir  | date                          | NO   |     | NULL    |                |
+| id_divisi  | int(11)                       | NO   |     | NULL    |                |
+| id_jabatan | int(11)                       | NO   |     | NULL    |                |
+| alamat     | text                          | YES  |     | NULL    |                |
++------------+-------------------------------+------+-----+---------+----------------+
+9 rows in set (0.029 sec)
+
+MariaDB [dbpegawai]> SHOW TABLES;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
+| jabatan             |
+| pegawai             |
++---------------------+
+3 rows in set (0.002 sec)
+
+MariaDB [dbpegawai]> INSERT INTO divisi (nama) VALUES
+    -> ('SDM'),('Keuangan'),('Marketing'),('IT');
+Query OK, 4 rows affected (0.108 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> SELECT * FROM divisi;
++----+-----------+
+| id | nama      |
++----+-----------+
+|  4 | IT        |
+|  2 | Keuangan  |
+|  3 | Marketing |
+|  1 | SDM       |
++----+-----------+
+4 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> INSERT INTO jabatan (nama) VALUES
+    -> ('Direktur'),('Manajer'),('Asisten Manajer'),('Staff');
+Query OK, 4 rows affected (0.015 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> SELECT * FROM jabatan;
++----+-----------------+
+| id | nama            |
++----+-----------------+
+|  3 | Asisten Manajer |
+|  1 | Direktur        |
+|  2 | Manajer         |
+|  4 | Staff           |
++----+-----------------+
+4 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip,nama,gender,tmp_lahir,tgl_lahir,id_divisi,id_jabatan,alamat) VALUES
+    (00001, 'Moon Taeil', 'Laki-laki', 'Solo', '1994-06-14', 4,3, 'Jakarta'),
+    (00002, 'Lee Taeyong', 'Laki-laki', 'Seoul', '1995-07-01', 1,4, 'Bogor'),
+    (00003, 'Johnny Santoso', 'Laki-laki', 'Medan', '1995-02-09', 2,3, 'Jakarta'),
+    (00004, 'Asep Yuta', 'Laki-laki', 'Bandung', '1995-10-26', 3,3, 'Jakarta'),
+    (00005, 'Karina Wulandari', 'Perempuan', 'Jakarta','2000-01-01', 1,3, 'Jakarta'),
+    (00006, 'Muhammad Doyoung', 'Laki-laki', 'Surabaya', '1995-02-01', 2,4, 'Jakarta'),
+    (00007, 'Joeng Jaehyun','Laki-laki', 'Seoul', '1997-02-14', 3,4, 'Jakarta'),
+    (00008, 'Kim Jungwoo', 'Laki-laki', 'Jogja', '1998-02-19', 4,4, 'Bogor'),
+    (00009, 'Mark Lee', 'Laki-laki', 'Surabaya', '1999-08-02', 1,1, 'Jakarta'),
+    (00010, 'Muhammad Haechan', 'Laki-laki', 'Bandung', '2000-06-06', 1,2, 'Depok'),
+    (00011, 'Huang Renjun', 'Laki-laki', 'Surabaya','2000-03-23', 2,1, 'Jakarta'),
+    (00012, 'Jeno Lee', 'Laki-laki', 'Jakarta', '2000-04-23', 3,1, 'Jakarta'),
+    (00013, 'Muhammad Jaemin', 'Laki-laki', 'Jakarta', '2000-08-13', 4,1, 'Jakarta'),
+    (00014, 'Bilqis Rhamadanti', 'Perempuan', 'Jakarta', '2003-11-13',2,2, 'Jakarta'),
+    (00015, 'Zhong Chenle', 'Laki-laki', 'China', '2002-11-22', 3,2, 'Jakarta'),
+    (00016, 'Park Jisung','Laki-laki', 'Aceh', '2002-02-05', 4,2, 'Depok'),
+    (00017, 'Jennie', 'Perempuan', 'Solo', '1996-09-06', 1,4,'Bogor'),
+    (00018, 'Lisa', 'Perempuana', 'Bandung', '1997-03-05', 2,4, 'Jakarta'),
+    (00019, 'Dita Karang', 'Perempuan', 'Bali', '1996-08-09', 3,4, 'Jakarta'),
+    (00020, 'Jesica', 'Perempuan', 'Depok', '2000-11-09',4,4, 'Jakarta');
+Query OK, 20 rows affected, 1 warning (0.006 sec)
+Records: 20  Duplicates: 0  Warnings: 1
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-----+-------------------+-----------+-----------+------------+-----------+------------+---------+
+| id | nip | nama              | gender    | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat  |
++----+-----+-------------------+-----------+-----------+------------+-----------+------------+---------+
+|  1 | 1   | Moon Taeil        | Laki-laki | Solo      | 1994-06-14 |         4 |          3 | Jakarta |
+|  2 | 2   | Lee Taeyong       | Laki-laki | Seoul     | 1995-07-01 |         1 |          4 | Bogor   |
+|  3 | 3   | Johnny Santoso    | Laki-laki | Medan     | 1995-02-09 |         2 |          3 | Jakarta |
+|  4 | 4   | Asep Yuta         | Laki-laki | Bandung   | 1995-10-26 |         3 |          3 | Jakarta |
+|  5 | 5   | Karina Wulandari  | Perempuan | Jakarta   | 2000-01-01 |         1 |          3 | Jakarta |
+|  6 | 6   | Muhammad Doyoung  | Laki-laki | Surabaya  | 1995-02-01 |         2 |          4 | Jakarta |
+|  7 | 7   | Joeng Jaehyun     | Laki-laki | Seoul     | 1997-02-14 |         3 |          4 | Jakarta |
+|  8 | 8   | Kim Jungwoo       | Laki-laki | Jogja     | 1998-02-19 |         4 |          4 | Bogor   |
+|  9 | 9   | Mark Lee          | Laki-laki | Surabaya  | 1999-08-02 |         1 |          1 | Jakarta |
+| 10 | 10  | Muhammad Haechan  | Laki-laki | Bandung   | 2000-06-06 |         1 |          2 | Depok   |
+| 11 | 11  | Huang Renjun      | Laki-laki | Surabaya  | 2000-03-23 |         2 |          1 | Jakarta |
+| 12 | 12  | Jeno Lee          | Laki-laki | Jakarta   | 2000-04-23 |         3 |          1 | Jakarta |
+| 13 | 13  | Muhammad Jaemin   | Laki-laki | Jakarta   | 2000-08-13 |         4 |          1 | Jakarta |
+| 14 | 14  | Bilqis Rhamadanti | Perempuan | Jakarta   | 2003-11-13 |         2 |          2 | Jakarta |
+| 15 | 15  | Zhong Chenle      | Laki-laki | China     | 2002-11-22 |         3 |          2 | Jakarta |
+| 16 | 16  | Park Jisung       | Laki-laki | Aceh      | 2002-02-05 |         4 |          2 | Depok   |
+| 17 | 17  | Jennie            | Perempuan | Solo      | 1996-09-06 |         1 |          4 | Bogor   |
+| 18 | 18  | Lisa              |           | Bandung   | 1997-03-05 |         2 |          4 | Jakarta |
+| 19 | 19  | Dita Karang       | Perempuan | Bali      | 1996-08-09 |         3 |          4 | Jakarta |
+| 20 | 20  | Jesica            | Perempuan | Depok     | 2000-11-09 |         4 |          4 | Jakarta |
++----+-----+-------------------+-----------+-----------+------------+-----------+------------+---------+
+20 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> UPDATE pegawai SET nama='Lisa', gender='Perempuan', alamat='Depok' WHERE id=18;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET nama='Chenle', tgl_lahir='2001-11-22', alamat='Depok' WHERE id=15;
+Query OK, 1 row affected (0.010 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET nama='Muhammad Na Jaemin', tmp_lahir='Bandung', alamat='Bekasi' WHERE id=13;
+Query OK, 1 row affected (0.004 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET nama='Lee Jeno',tmp_lahir='Jogja', alamat='Tanggerang' WHERE id=12;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET nama='Jessica Mega',tmp_lahir='Jakarta', alamat='Depok' WHERE id=20;
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> DELETE FROM pegawai ORDER BY id DESC LIMIT 2;
+Query OK, 2 rows affected (0.004 sec)
+
+MariaDB [dbpegawai]> ALTER TABLE pegawai ADD COLUMN berat_badan float not null;
+Query OK, 0 rows affected (0.014 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET berat_badan = ROUND(RAND() * 40 + 40, 2);
+Query OK, 18 rows affected (0.006 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+MariaDB [dbpegawai]> ALTER TABLE pegawai ADD COLUMN umur int not null;
+Query OK, 0 rows affected (0.014 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET umur = ROUND(RAND() * 45 + 20, 4);
+Query OK, 18 rows affected (0.011 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+MariaDB [dbpegawai]> ALTER TABLE pegawai CHANGE gender jenis_kelamin enum('Laki-laki','Perempuan') not null;
+Query OK, 0 rows affected (0.013 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> SELECT nip,nama,jenis_kelamin,alamat FROM pegawai;
++-----+--------------------+---------------+------------+
+| nip | nama               | jenis_kelamin | alamat     |
++-----+--------------------+---------------+------------+
+| 1   | Moon Taeil         | Laki-laki     | Jakarta    |
+| 2   | Lee Taeyong        | Laki-laki     | Bogor      |
+| 3   | Johnny Santoso     | Laki-laki     | Jakarta    |
+| 4   | Asep Yuta          | Laki-laki     | Jakarta    |
+| 5   | Karina Wulandari   | Perempuan     | Jakarta    |
+| 6   | Muhammad Doyoung   | Laki-laki     | Jakarta    |
+| 7   | Joeng Jaehyun      | Laki-laki     | Jakarta    |
+| 8   | Kim Jungwoo        | Laki-laki     | Bogor      |
+| 9   | Mark Lee           | Laki-laki     | Jakarta    |
+| 10  | Muhammad Haechan   | Laki-laki     | Depok      |
+| 11  | Huang Renjun       | Laki-laki     | Jakarta    |
+| 12  | Lee Jeno           | Laki-laki     | Tanggerang |
+| 13  | Muhammad Na Jaemin | Laki-laki     | Bekasi     |
+| 14  | Bilqis Rhamadanti  | Perempuan     | Jakarta    |
+| 15  | Chenle             | Laki-laki     | Depok      |
+| 16  | Park Jisung        | Laki-laki     | Depok      |
+| 17  | Jennie             | Perempuan     | Bogor      |
+| 18  | Lisa               | Perempuan     | Depok      |
++-----+--------------------+---------------+------------+
+18 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT nip,nama,jenis_kelamin,alamat FROM pegawai WHERE jenis_kelamin='Laki-laki';
++-----+--------------------+---------------+------------+
+| nip | nama               | jenis_kelamin | alamat     |
++-----+--------------------+---------------+------------+
+| 1   | Moon Taeil         | Laki-laki     | Jakarta    |
+| 2   | Lee Taeyong        | Laki-laki     | Bogor      |
+| 3   | Johnny Santoso     | Laki-laki     | Jakarta    |
+| 4   | Asep Yuta          | Laki-laki     | Jakarta    |
+| 6   | Muhammad Doyoung   | Laki-laki     | Jakarta    |
+| 7   | Joeng Jaehyun      | Laki-laki     | Jakarta    |
+| 8   | Kim Jungwoo        | Laki-laki     | Bogor      |
+| 9   | Mark Lee           | Laki-laki     | Jakarta    |
+| 10  | Muhammad Haechan   | Laki-laki     | Depok      |
+| 11  | Huang Renjun       | Laki-laki     | Jakarta    |
+| 12  | Lee Jeno           | Laki-laki     | Tanggerang |
+| 13  | Muhammad Na Jaemin | Laki-laki     | Bekasi     |
+| 15  | Chenle             | Laki-laki     | Depok      |
+| 16  | Park Jisung        | Laki-laki     | Depok      |
++-----+--------------------+---------------+------------+
+14 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT nip,nama,jenis_kelamin,alamat FROM pegawai WHERE id_divisi=4 AND jenis_kelamin='Perempuan';
+Empty set (0.002 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE umur > 30 AND tmp_lahir='Jakarta';
++----+-----+-------------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+| id | nip | nama              | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat  | berat_badan | umur |
++----+-----+-------------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+| 14 | 14  | Bilqis Rhamadanti | Perempuan     | Jakarta   | 2003-11-13 |         2 |          2 | Jakarta |       76.58 |   50 |
++----+-----+-------------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE id_divisi=3 AND umur > 30 AND jenis_kelamin='Perempuan';
+Empty set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nip=1;
++----+-----+------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+| id | nip | nama       | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat  | berat_badan | umur |
++----+-----+------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+|  1 | 1   | Moon Taeil | Laki-laki     | Solo      | 1994-06-14 |         4 |          3 | Jakarta |       72.92 |   50 |
++----+-----+------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE jenis_kelamin='Laki-laki';
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat     | berat_badan | umur |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+|  1 | 1   | Moon Taeil         | Laki-laki     | Solo      | 1994-06-14 |         4 |          3 | Jakarta    |       72.92 |   50 |
+|  2 | 2   | Lee Taeyong        | Laki-laki     | Seoul     | 1995-07-01 |         1 |          4 | Bogor      |       79.12 |   64 |
+|  3 | 3   | Johnny Santoso     | Laki-laki     | Medan     | 1995-02-09 |         2 |          3 | Jakarta    |       56.81 |   58 |
+|  4 | 4   | Asep Yuta          | Laki-laki     | Bandung   | 1995-10-26 |         3 |          3 | Jakarta    |       46.71 |   35 |
+|  6 | 6   | Muhammad Doyoung   | Laki-laki     | Surabaya  | 1995-02-01 |         2 |          4 | Jakarta    |       55.46 |   40 |
+|  7 | 7   | Joeng Jaehyun      | Laki-laki     | Seoul     | 1997-02-14 |         3 |          4 | Jakarta    |       47.95 |   62 |
+|  8 | 8   | Kim Jungwoo        | Laki-laki     | Jogja     | 1998-02-19 |         4 |          4 | Bogor      |       73.36 |   36 |
+|  9 | 9   | Mark Lee           | Laki-laki     | Surabaya  | 1999-08-02 |         1 |          1 | Jakarta    |       62.93 |   63 |
+| 10 | 10  | Muhammad Haechan   | Laki-laki     | Bandung   | 2000-06-06 |         1 |          2 | Depok      |        54.6 |   52 |
+| 11 | 11  | Huang Renjun       | Laki-laki     | Surabaya  | 2000-03-23 |         2 |          1 | Jakarta    |       44.21 |   52 |
+| 12 | 12  | Lee Jeno           | Laki-laki     | Jogja     | 2000-04-23 |         3 |          1 | Tanggerang |       57.26 |   39 |
+| 13 | 13  | Muhammad Na Jaemin | Laki-laki     | Bandung   | 2000-08-13 |         4 |          1 | Bekasi     |       73.67 |   64 |
+| 15 | 15  | Chenle             | Laki-laki     | China     | 2001-11-22 |         3 |          2 | Depok      |       41.89 |   36 |
+| 16 | 16  | Park Jisung        | Laki-laki     | Aceh      | 2002-02-05 |         4 |          2 | Depok      |        59.7 |   57 |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+14 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nip IN (7, 9, 12, 13);
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat     | berat_badan | umur |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+|  7 | 7   | Joeng Jaehyun      | Laki-laki     | Seoul     | 1997-02-14 |         3 |          4 | Jakarta    |       47.95 |   62 |
+|  9 | 9   | Mark Lee           | Laki-laki     | Surabaya  | 1999-08-02 |         1 |          1 | Jakarta    |       62.93 |   63 |
+| 12 | 12  | Lee Jeno           | Laki-laki     | Jogja     | 2000-04-23 |         3 |          1 | Tanggerang |       57.26 |   39 |
+| 13 | 13  | Muhammad Na Jaemin | Laki-laki     | Bandung   | 2000-08-13 |         4 |          1 | Bekasi     |       73.67 |   64 |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+4 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE tmp_lahir IN ('Jogja','Seoul','Bandung','China');
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat     | berat_badan | umur |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+|  2 | 2   | Lee Taeyong        | Laki-laki     | Seoul     | 1995-07-01 |         1 |          4 | Bogor      |       79.12 |   64 |
+|  4 | 4   | Asep Yuta          | Laki-laki     | Bandung   | 1995-10-26 |         3 |          3 | Jakarta    |       46.71 |   35 |
+|  7 | 7   | Joeng Jaehyun      | Laki-laki     | Seoul     | 1997-02-14 |         3 |          4 | Jakarta    |       47.95 |   62 |
+|  8 | 8   | Kim Jungwoo        | Laki-laki     | Jogja     | 1998-02-19 |         4 |          4 | Bogor      |       73.36 |   36 |
+| 10 | 10  | Muhammad Haechan   | Laki-laki     | Bandung   | 2000-06-06 |         1 |          2 | Depok      |        54.6 |   52 |
+| 12 | 12  | Lee Jeno           | Laki-laki     | Jogja     | 2000-04-23 |         3 |          1 | Tanggerang |       57.26 |   39 |
+| 13 | 13  | Muhammad Na Jaemin | Laki-laki     | Bandung   | 2000-08-13 |         4 |          1 | Bekasi     |       73.67 |   64 |
+| 15 | 15  | Chenle             | Laki-laki     | China     | 2001-11-22 |         3 |          2 | Depok      |       41.89 |   36 |
+| 18 | 18  | Lisa               | Perempuan     | Bandung   | 1997-03-05 |         2 |          4 | Depok      |       45.06 |   53 |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+9 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY nama;
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat     | berat_badan | umur |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+|  4 | 4   | Asep Yuta          | Laki-laki     | Bandung   | 1995-10-26 |         3 |          3 | Jakarta    |       46.71 |   35 |
+| 14 | 14  | Bilqis Rhamadanti  | Perempuan     | Jakarta   | 2003-11-13 |         2 |          2 | Jakarta    |       76.58 |   50 |
+| 15 | 15  | Chenle             | Laki-laki     | China     | 2001-11-22 |         3 |          2 | Depok      |       41.89 |   36 |
+| 11 | 11  | Huang Renjun       | Laki-laki     | Surabaya  | 2000-03-23 |         2 |          1 | Jakarta    |       44.21 |   52 |
+| 17 | 17  | Jennie             | Perempuan     | Solo      | 1996-09-06 |         1 |          4 | Bogor      |       52.83 |   22 |
+|  7 | 7   | Joeng Jaehyun      | Laki-laki     | Seoul     | 1997-02-14 |         3 |          4 | Jakarta    |       47.95 |   62 |
+|  3 | 3   | Johnny Santoso     | Laki-laki     | Medan     | 1995-02-09 |         2 |          3 | Jakarta    |       56.81 |   58 |
+|  5 | 5   | Karina Wulandari   | Perempuan     | Jakarta   | 2000-01-01 |         1 |          3 | Jakarta    |       63.12 |   24 |
+|  8 | 8   | Kim Jungwoo        | Laki-laki     | Jogja     | 1998-02-19 |         4 |          4 | Bogor      |       73.36 |   36 |
+| 12 | 12  | Lee Jeno           | Laki-laki     | Jogja     | 2000-04-23 |         3 |          1 | Tanggerang |       57.26 |   39 |
+|  2 | 2   | Lee Taeyong        | Laki-laki     | Seoul     | 1995-07-01 |         1 |          4 | Bogor      |       79.12 |   64 |
+| 18 | 18  | Lisa               | Perempuan     | Bandung   | 1997-03-05 |         2 |          4 | Depok      |       45.06 |   53 |
+|  9 | 9   | Mark Lee           | Laki-laki     | Surabaya  | 1999-08-02 |         1 |          1 | Jakarta    |       62.93 |   63 |
+|  1 | 1   | Moon Taeil         | Laki-laki     | Solo      | 1994-06-14 |         4 |          3 | Jakarta    |       72.92 |   50 |
+|  6 | 6   | Muhammad Doyoung   | Laki-laki     | Surabaya  | 1995-02-01 |         2 |          4 | Jakarta    |       55.46 |   40 |
+| 10 | 10  | Muhammad Haechan   | Laki-laki     | Bandung   | 2000-06-06 |         1 |          2 | Depok      |        54.6 |   52 |
+| 13 | 13  | Muhammad Na Jaemin | Laki-laki     | Bandung   | 2000-08-13 |         4 |          1 | Bekasi     |       73.67 |   64 |
+| 16 | 16  | Park Jisung        | Laki-laki     | Aceh      | 2002-02-05 |         4 |          2 | Depok      |        59.7 |   57 |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+18 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY berat_badan DESC;
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat     | berat_badan | umur |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+|  2 | 2   | Lee Taeyong        | Laki-laki     | Seoul     | 1995-07-01 |         1 |          4 | Bogor      |       79.12 |   64 |
+| 14 | 14  | Bilqis Rhamadanti  | Perempuan     | Jakarta   | 2003-11-13 |         2 |          2 | Jakarta    |       76.58 |   50 |
+| 13 | 13  | Muhammad Na Jaemin | Laki-laki     | Bandung   | 2000-08-13 |         4 |          1 | Bekasi     |       73.67 |   64 |
+|  8 | 8   | Kim Jungwoo        | Laki-laki     | Jogja     | 1998-02-19 |         4 |          4 | Bogor      |       73.36 |   36 |
+|  1 | 1   | Moon Taeil         | Laki-laki     | Solo      | 1994-06-14 |         4 |          3 | Jakarta    |       72.92 |   50 |
+|  5 | 5   | Karina Wulandari   | Perempuan     | Jakarta   | 2000-01-01 |         1 |          3 | Jakarta    |       63.12 |   24 |
+|  9 | 9   | Mark Lee           | Laki-laki     | Surabaya  | 1999-08-02 |         1 |          1 | Jakarta    |       62.93 |   63 |
+| 16 | 16  | Park Jisung        | Laki-laki     | Aceh      | 2002-02-05 |         4 |          2 | Depok      |        59.7 |   57 |
+| 12 | 12  | Lee Jeno           | Laki-laki     | Jogja     | 2000-04-23 |         3 |          1 | Tanggerang |       57.26 |   39 |
+|  3 | 3   | Johnny Santoso     | Laki-laki     | Medan     | 1995-02-09 |         2 |          3 | Jakarta    |       56.81 |   58 |
+|  6 | 6   | Muhammad Doyoung   | Laki-laki     | Surabaya  | 1995-02-01 |         2 |          4 | Jakarta    |       55.46 |   40 |
+| 10 | 10  | Muhammad Haechan   | Laki-laki     | Bandung   | 2000-06-06 |         1 |          2 | Depok      |        54.6 |   52 |
+| 17 | 17  | Jennie             | Perempuan     | Solo      | 1996-09-06 |         1 |          4 | Bogor      |       52.83 |   22 |
+|  7 | 7   | Joeng Jaehyun      | Laki-laki     | Seoul     | 1997-02-14 |         3 |          4 | Jakarta    |       47.95 |   62 |
+|  4 | 4   | Asep Yuta          | Laki-laki     | Bandung   | 1995-10-26 |         3 |          3 | Jakarta    |       46.71 |   35 |
+| 18 | 18  | Lisa               | Perempuan     | Bandung   | 1997-03-05 |         2 |          4 | Depok      |       45.06 |   53 |
+| 11 | 11  | Huang Renjun       | Laki-laki     | Surabaya  | 2000-03-23 |         2 |          1 | Jakarta    |       44.21 |   52 |
+| 15 | 15  | Chenle             | Laki-laki     | China     | 2001-11-22 |         3 |          2 | Depok      |       41.89 |   36 |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+18 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai LIMIT 5;
++----+-----+------------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+| id | nip | nama             | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat  | berat_badan | umur |
++----+-----+------------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+|  1 | 1   | Moon Taeil       | Laki-laki     | Solo      | 1994-06-14 |         4 |          3 | Jakarta |       72.92 |   50 |
+|  2 | 2   | Lee Taeyong      | Laki-laki     | Seoul     | 1995-07-01 |         1 |          4 | Bogor   |       79.12 |   64 |
+|  3 | 3   | Johnny Santoso   | Laki-laki     | Medan     | 1995-02-09 |         2 |          3 | Jakarta |       56.81 |   58 |
+|  4 | 4   | Asep Yuta        | Laki-laki     | Bandung   | 1995-10-26 |         3 |          3 | Jakarta |       46.71 |   35 |
+|  5 | 5   | Karina Wulandari | Perempuan     | Jakarta   | 2000-01-01 |         1 |          3 | Jakarta |       63.12 |   24 |
++----+-----+------------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+5 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai LIMIT 5 OFFSET 10;
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat     | berat_badan | umur |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+| 11 | 11  | Huang Renjun       | Laki-laki     | Surabaya  | 2000-03-23 |         2 |          1 | Jakarta    |       44.21 |   52 |
+| 12 | 12  | Lee Jeno           | Laki-laki     | Jogja     | 2000-04-23 |         3 |          1 | Tanggerang |       57.26 |   39 |
+| 13 | 13  | Muhammad Na Jaemin | Laki-laki     | Bandung   | 2000-08-13 |         4 |          1 | Bekasi     |       73.67 |   64 |
+| 14 | 14  | Bilqis Rhamadanti  | Perempuan     | Jakarta   | 2003-11-13 |         2 |          2 | Jakarta    |       76.58 |   50 |
+| 15 | 15  | Chenle             | Laki-laki     | China     | 2001-11-22 |         3 |          2 | Depok      |       41.89 |   36 |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+5 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai;
++----------------+
+| jumlah_pegawai |
++----------------+
+|             18 |
++----------------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT nip,nama,umur FROM pegawai WHERE umur = (SELECT MAX(umur) FROM pegawai);
++-----+--------------------+------+
+| nip | nama               | umur |
++-----+--------------------+------+
+| 2   | Lee Taeyong        |   64 |
+| 13  | Muhammad Na Jaemin |   64 |
++-----+--------------------+------+
+2 rows in set (0.002 sec)
+
+MariaDB [dbpegawai]> SELECT nip,nama,umur FROM pegawai WHERE berat_badan = (SELECT MIN(berat_badan) FROM pegawai);
++-----+--------+------+
+| nip | nama   | umur |
++-----+--------+------+
+| 15  | Chenle |   36 |
++-----+--------+------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT AVG(umur) AS rata2_umur FROM pegawai;
++------------+
+| rata2_umur |
++------------+
+|    47.6111 |
++------------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS 'jumlah data laki-laki yang umur lebih dari 40' FROM pegawai
+    -> WHERE jenis_kelamin='Laki-laki'
+    -> AND umur > 40 AND id_jabatan=2;
++-----------------------------------------------+
+| jumlah data laki-laki yang umur lebih dari 40 |
++-----------------------------------------------+
+|                                             2 |
++-----------------------------------------------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS 'jumlah data Perempuan yang umur kurang dari 40' FROM pegawai
+    -> WHERE jenis_kelamin='Perempuan'
+    -> AND umur < 40 AND id_jabatan=4;
++------------------------------------------------+
+| jumlah data Perempuan yang umur kurang dari 40 |
++------------------------------------------------+
+|                                              1 |
++------------------------------------------------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS 'jumlah data perempuan' FROM pegawai WHERE jenis_kelamin='Perempuan';
++-----------------------+
+| jumlah data perempuan |
++-----------------------+
+|                     4 |
++-----------------------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT SUM(id_divisi) AS jumlah_pegawai_SDM FROM pegawai WHERE id_divisi=1;
++--------------------+
+| jumlah_pegawai_SDM |
++--------------------+
+|                  5 |
++--------------------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT id_divisi, COUNT(id_divisi) AS 'JUmlah pegawai per divisi' FROM pegawai GROUP BY id_divisi;
++-----------+---------------------------+
+| id_divisi | JUmlah pegawai per divisi |
++-----------+---------------------------+
+|         1 |                         5 |
+|         2 |                         5 |
+|         3 |                         4 |
+|         4 |                         4 |
++-----------+---------------------------+
+4 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]>  SELECT jenis_kelamin, COUNT(jenis_kelamin) AS 'Jumlah jenis_kelamin' FROM pegawai GROUP BY jenis_kelamin HAVING COUNT(jenis_kelamin) >=10;
++---------------+----------------------+
+| jenis_kelamin | Jumlah jenis_kelamin |
++---------------+----------------------+
+| Laki-laki     |                   14 |
++---------------+----------------------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE 'Muhammad%';
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat  | berat_badan | umur |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+|  6 | 6   | Muhammad Doyoung   | Laki-laki     | Surabaya  | 1995-02-01 |         2 |          4 | Jakarta |       55.46 |   40 |
+| 10 | 10  | Muhammad Haechan   | Laki-laki     | Bandung   | 2000-06-06 |         1 |          2 | Depok   |        54.6 |   52 |
+| 13 | 13  | Muhammad Na Jaemin | Laki-laki     | Bandung   | 2000-08-13 |         4 |          1 | Bekasi  |       73.67 |   64 |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+3 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]>  SELECT * FROM pegawai WHERE nama LIKE '%Santoso';
++----+-----+----------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+| id | nip | nama           | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat  | berat_badan | umur |
++----+-----+----------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+|  3 | 3   | Johnny Santoso | Laki-laki     | Medan     | 1995-02-09 |         2 |          3 | Jakarta |       56.81 |   58 |
++----+-----+----------------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE '%Asep%';
++----+-----+-----------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+| id | nip | nama      | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat  | berat_badan | umur |
++----+-----+-----------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+|  4 | 4   | Asep Yuta | Laki-laki     | Bandung   | 1995-10-26 |         3 |          3 | Jakarta |       46.71 |   35 |
++----+-----+-----------+---------------+-----------+------------+-----------+------------+---------+-------------+------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]>  SELECT * FROM pegawai WHERE nama LIKE '____s%';
+Empty set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+| id | nip | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | id_divisi | id_jabatan | alamat     | berat_badan | umur |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+|  1 | 1   | Moon Taeil         | Laki-laki     | Solo      | 1994-06-14 |         4 |          3 | Jakarta    |       72.92 |   50 |
+|  2 | 2   | Lee Taeyong        | Laki-laki     | Seoul     | 1995-07-01 |         1 |          4 | Bogor      |       79.12 |   64 |
+|  3 | 3   | Johnny Santoso     | Laki-laki     | Medan     | 1995-02-09 |         2 |          3 | Jakarta    |       56.81 |   58 |
+|  4 | 4   | Asep Yuta          | Laki-laki     | Bandung   | 1995-10-26 |         3 |          3 | Jakarta    |       46.71 |   35 |
+|  5 | 5   | Karina Wulandari   | Perempuan     | Jakarta   | 2000-01-01 |         1 |          3 | Jakarta    |       63.12 |   24 |
+|  6 | 6   | Muhammad Doyoung   | Laki-laki     | Surabaya  | 1995-02-01 |         2 |          4 | Jakarta    |       55.46 |   40 |
+|  7 | 7   | Joeng Jaehyun      | Laki-laki     | Seoul     | 1997-02-14 |         3 |          4 | Jakarta    |       47.95 |   62 |
+|  8 | 8   | Kim Jungwoo        | Laki-laki     | Jogja     | 1998-02-19 |         4 |          4 | Bogor      |       73.36 |   36 |
+|  9 | 9   | Mark Lee           | Laki-laki     | Surabaya  | 1999-08-02 |         1 |          1 | Jakarta    |       62.93 |   63 |
+| 10 | 10  | Muhammad Haechan   | Laki-laki     | Bandung   | 2000-06-06 |         1 |          2 | Depok      |        54.6 |   52 |
+| 11 | 11  | Huang Renjun       | Laki-laki     | Surabaya  | 2000-03-23 |         2 |          1 | Jakarta    |       44.21 |   52 |
+| 12 | 12  | Lee Jeno           | Laki-laki     | Jogja     | 2000-04-23 |         3 |          1 | Tanggerang |       57.26 |   39 |
+| 13 | 13  | Muhammad Na Jaemin | Laki-laki     | Bandung   | 2000-08-13 |         4 |          1 | Bekasi     |       73.67 |   64 |
+| 14 | 14  | Bilqis Rhamadanti  | Perempuan     | Jakarta   | 2003-11-13 |         2 |          2 | Jakarta    |       76.58 |   50 |
+| 15 | 15  | Chenle             | Laki-laki     | China     | 2001-11-22 |         3 |          2 | Depok      |       41.89 |   36 |
+| 16 | 16  | Park Jisung        | Laki-laki     | Aceh      | 2002-02-05 |         4 |          2 | Depok      |        59.7 |   57 |
+| 17 | 17  | Jennie             | Perempuan     | Solo      | 1996-09-06 |         1 |          4 | Bogor      |       52.83 |   22 |
+| 18 | 18  | Lisa               | Perempuan     | Bandung   | 1997-03-05 |         2 |          4 | Depok      |       45.06 |   53 |
++----+-----+--------------------+---------------+-----------+------------+-----------+------------+------------+-------------+------+
+18 rows in set (0.001 sec)
+
+
